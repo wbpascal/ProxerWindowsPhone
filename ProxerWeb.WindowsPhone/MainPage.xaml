@@ -1,0 +1,25 @@
+﻿<Page
+    x:Class="Proxer.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Background="#FF343434">
+        <WebView x:Name="MainWebView" RequestedTheme="Dark" NavigationStarting="MainWebView_NavigationStarting"
+                 ScriptNotify="MainWebView_ScriptNotify" NavigationCompleted="MainWebView_NavigationCompleted" />
+        <Grid x:Name="LoadingSignGrid" Visibility="Collapsed">
+            <Rectangle Fill="Black" Opacity="0.7" />
+            <Border BorderBrush="White" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="1">
+                <StackPanel Background="Black" Orientation="Horizontal">
+                    <ProgressRing Margin="5" IsActive="True" BorderThickness="1" Width="70" Height="70" Foreground="White"/>
+                    <TextBlock MaxWidth="200" TextWrapping="Wrap"
+                               Text="Bitte warte einen Moment. Video wird vorbereitet..." VerticalAlignment="Center"
+                               Foreground="#FFB9B9B9" Margin="0,0,12,0" FontSize="16" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>
