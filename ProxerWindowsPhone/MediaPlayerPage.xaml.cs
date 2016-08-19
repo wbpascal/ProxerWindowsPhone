@@ -2,7 +2,9 @@
 using Windows.Phone.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.PlayerFramework;
 
 namespace Proxer
 {
@@ -25,6 +27,18 @@ namespace Proxer
             Frame rootFrame = (Frame) Window.Current.Content;
             if (rootFrame.CanGoBack) rootFrame.GoBack();
             else rootFrame.Navigate(typeof(MainPage), null);
+        }
+
+        private void MediaPlayerControl_IsFullScreenChanged(object sender, RoutedPropertyChangedEventArgs<bool> e)
+        {
+            (sender as MediaPlayer).IsFullWindow = e.NewValue;
+        }
+
+        private void MediaPlayerControl_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            MediaPlayer lPlayer = sender as MediaPlayer;
+            if (lPlayer == null) return;
+            if (lPlayer.IsFullWindow) lPlayer.IsFullScreen = false;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
