@@ -10,13 +10,31 @@ namespace Proxer
 {
     public sealed partial class MediaPlayerPage : Page
     {
+        private readonly DoublePressHandler _backDoublePressHandler;
+
         public MediaPlayerPage()
         {
-            this.InitializeComponent();
+            this._backDoublePressHandler = new DoublePressHandler(TimeSpan.FromSeconds(2.5));
+            this._backDoublePressHandler.PressedOnce += this.BackDoublePressHandler_PressedOnce;
+            this._backDoublePressHandler.PressedTwice += this.BackDoublePressHandler_PressedTwice;
             HardwareButtons.BackPressed += this.HardwareButtonsOnBackPressed;
+
+            this.InitializeComponent();
         }
 
         #region
+
+        private void BackDoublePressHandler_PressedOnce(object sender, EventArgs e)
+        {
+            this.BottomToast.Activate();
+        }
+
+        private void BackDoublePressHandler_PressedTwice(object sender, EventArgs e)
+        {
+            Frame rootFrame = (Frame) Window.Current.Content;
+            if (rootFrame.CanGoBack) rootFrame.GoBack();
+            else rootFrame.Navigate(typeof(MainPage), null);
+        }
 
         private void HardwareButtonsOnBackPressed(object sender, BackPressedEventArgs backPressedEventArgs)
         {
@@ -24,9 +42,8 @@ namespace Proxer
                 (Window.Current.Content as Frame)?.SourcePageType != typeof(MediaPlayerPage)) return;
 
             backPressedEventArgs.Handled = true;
-            Frame rootFrame = (Frame) Window.Current.Content;
-            if (rootFrame.CanGoBack) rootFrame.GoBack();
-            else rootFrame.Navigate(typeof(MainPage), null);
+            if (this.MediaPlayerControl.IsFullScreen) this.MediaPlayerControl.IsFullScreen = false;
+            this._backDoublePressHandler.Pressed();
         }
 
         private void MediaPlayerControl_IsFullScreenChanged(object sender, RoutedPropertyChangedEventArgs<bool> e)

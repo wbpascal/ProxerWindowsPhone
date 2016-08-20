@@ -5,6 +5,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:playback="using:Windows.Media.Playback"
       xmlns:playerFramework="using:Microsoft.PlayerFramework"
+      xmlns:proxer="using:Proxer"
       mc:Ignorable="d"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -12,5 +13,7 @@
         <playerFramework:MediaPlayer x:Name="MediaPlayerControl" IsZoomVisible="True" IsFullScreenVisible="True"
                                      AutoHide="True" IsFullScreenChanged="MediaPlayerControl_IsFullScreenChanged"
                                      PointerPressed="MediaPlayerControl_PointerPressed" />
+        <proxer:BottomToast x:Name="BottomToast"
+                            Message="Drücke zurück ein weiteres Mal &#10;um den Media-Player zu verlassen." />
     </Grid>
 </Page>

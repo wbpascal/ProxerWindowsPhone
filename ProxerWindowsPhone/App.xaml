@@ -1,5 +1,9 @@
 ﻿<Application
     x:Class="Proxer.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:proxer="using:Proxer">
+    <Application.Resources>
+        <proxer:StaticResources x:Key="StaticResources" />
+    </Application.Resources>
 </Application>
