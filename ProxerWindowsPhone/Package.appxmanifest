@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
-  <Identity Name="c1cfd7c3-dfc1-4440-81cc-a8e85943e93e" Publisher="CN=Pascal" Version="1.1.0.0" />
-  <mp:PhoneIdentity PhoneProductId="c1cfd7c3-dfc1-4440-81cc-a8e85943e93e" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Identity Name="1191PascalWiedenbeck.Proxer.Meinoffiziell" Publisher="CN=0628F177-1744-40AD-B19B-0EECF8912E75" Version="1.1.0.0" />
+  <mp:PhoneIdentity PhoneProductId="81df11fd-8bf4-4b62-9714-d20b84bf1d74" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>ProxerWeb</DisplayName>
-    <PublisherDisplayName>InfiniteSoul</PublisherDisplayName>
+    <DisplayName>Proxer.Me (inoffiziell)</DisplayName>
+    <PublisherDisplayName>Pascal Wiedenbeck</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Prerequisites>
