@@ -8,10 +8,8 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Proxer
 {
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage
     {
-        private bool _isLoadingStream;
-
         public MainPage()
         {
             this.InitializeComponent();
@@ -24,12 +22,7 @@ namespace Proxer
 
         private bool IsLoadingStream
         {
-            get { return this._isLoadingStream; }
-            set
-            {
-                this.LoadingSignGrid.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
-                this._isLoadingStream = value;
-            }
+            set { this.LoadingSignGrid.Visibility = value ? Visibility.Visible : Visibility.Collapsed; }
         }
 
         #endregion

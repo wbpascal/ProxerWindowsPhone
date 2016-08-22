@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Proxer
 {
-    public sealed partial class App : Application
+    public sealed partial class App
     {
         private TransitionCollection _transitions;
 
