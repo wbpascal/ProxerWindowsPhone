@@ -9,6 +9,6 @@
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <MediaElement x:Name="MediaPlayer" AreTransportControlsEnabled="True" />
+        <MediaElement x:Name="MediaPlayer" AreTransportControlsEnabled="True" CurrentStateChanged="MediaPlayer_CurrentStateChanged" />
     </Grid>
 </Page>
