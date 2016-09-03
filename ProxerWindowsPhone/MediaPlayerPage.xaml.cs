@@ -23,7 +23,7 @@ namespace Proxer
         private void HardwareButtonsOnBackPressed(object sender, BackPressedEventArgs backPressedEventArgs)
         {
             if (backPressedEventArgs.Handled ||
-                (Window.Current.Content as Frame)?.SourcePageType != typeof(MediaPlayerPage)) return;
+                ((Window.Current.Content as Frame)?.SourcePageType != typeof(MediaPlayerPage))) return;
 
             backPressedEventArgs.Handled = true;
             this.MediaPlayer.Stop();
@@ -32,15 +32,6 @@ namespace Proxer
             if (rootFrame.CanGoBack) rootFrame.GoBack();
             else rootFrame.Navigate(typeof(MainPage), null);
         }
-
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            if (!(e.Parameter is Uri)) return;
-            this.MediaPlayer.Source = (Uri) e.Parameter;
-            this.MediaPlayer.Play();
-        }
-
-        #endregion
 
         private void MediaPlayer_CurrentStateChanged(object sender, RoutedEventArgs e)
         {
@@ -59,5 +50,14 @@ namespace Proxer
                 this._appDisplayRequest = null;
             }
         }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (!(e.Parameter is Uri)) return;
+            this.MediaPlayer.Source = (Uri) e.Parameter;
+            this.MediaPlayer.Play();
+        }
+
+        #endregion
     }
 }

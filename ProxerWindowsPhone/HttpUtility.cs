@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Proxer
@@ -9,22 +10,23 @@ namespace Proxer
     {
         #region
 
-        public static async Task<string> GetRequest(Uri addressUri)
+        public static async Task<string> GetRequest(Uri addressUri, CancellationToken cancellationToken)
         {
             using (HttpClient lClient = new HttpClient())
             {
-                return await lClient.GetStringAsync(addressUri);
+                HttpResponseMessage lResult = await lClient.GetAsync(addressUri, cancellationToken);
+                return lResult.IsSuccessStatusCode ? await lResult.Content.ReadAsStringAsync() : string.Empty;
             }
         }
 
-        public static async Task<string> PostRequest(Uri addressUri, Dictionary<string, string> postArgs)
+        public static async Task<string> PostRequest(Uri addressUri, Dictionary<string, string> postArgs,
+            CancellationToken cancellationToken)
         {
             using (HttpClient lClient = new HttpClient())
             {
-                return
-                    await
-                        (await lClient.PostAsync(addressUri, new FormUrlEncodedContent(postArgs))).Content
-                            .ReadAsStringAsync();
+                HttpResponseMessage lResult =
+                    await lClient.PostAsync(addressUri, new FormUrlEncodedContent(postArgs), cancellationToken);
+                return lResult.IsSuccessStatusCode ? await lResult.Content.ReadAsStringAsync() : string.Empty;
             }
         }
 

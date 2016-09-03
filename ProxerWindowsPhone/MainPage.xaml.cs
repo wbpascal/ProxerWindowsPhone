@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Windows.Data.Html;
 using Windows.Phone.UI.Input;
 using Windows.UI.Popups;
@@ -10,10 +12,11 @@ namespace Proxer
 {
     public sealed partial class MainPage
     {
+        private CancellationTokenSource _tokenSource;
+
         public MainPage()
         {
             this.InitializeComponent();
-
             this.NavigationCacheMode = NavigationCacheMode.Required;
             HardwareButtons.BackPressed += this.HardwareButtonsOnBackPressed;
         }
@@ -31,11 +34,12 @@ namespace Proxer
 
         private void HardwareButtonsOnBackPressed(object sender, BackPressedEventArgs backPressedEventArgs)
         {
-            if (backPressedEventArgs.Handled || (Window.Current.Content as Frame)?.SourcePageType != typeof(MainPage))
+            if (backPressedEventArgs.Handled || ((Window.Current.Content as Frame)?.SourcePageType != typeof(MainPage)))
                 return;
 
             backPressedEventArgs.Handled = true;
-            if (this.MainWebView.CanGoBack) this.MainWebView.GoBack();
+            if ((this._tokenSource != null) && !this._tokenSource.IsCancellationRequested) this._tokenSource.Cancel();
+            else if (this.MainWebView.CanGoBack) this.MainWebView.GoBack();
             else Application.Current.Exit();
         }
 
@@ -57,15 +61,24 @@ namespace Proxer
             if (args.Uri.Authority.Equals("proxer.me")) return;
 
             args.Cancel = true;
+            this.IsLoadingStream = true;
             try
             {
-                this.IsLoadingStream = true;
-                await VideoUriFetcher.HandleStreamPartnerUri(args.Uri);
-                this.IsLoadingStream = false;
+                await
+                    VideoUriFetcher.HandleStreamPartnerUri(args.Uri,
+                        (this._tokenSource = new CancellationTokenSource()).Token);
+            }
+            catch (TaskCanceledException)
+            {
+                //ignored
             }
             catch
             {
                 await new MessageDialog("Der Stream konnte nicht abgerufen werden!").ShowAsync();
+            }
+            finally
+            {
+                this.IsLoadingStream = false;
             }
         }
 
