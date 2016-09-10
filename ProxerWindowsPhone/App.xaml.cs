@@ -63,14 +63,18 @@ namespace Proxer
             UnhandledExceptionEventArgs unhandledExceptionEventArgs)
         {
             unhandledExceptionEventArgs.Handled = true;
+            Exception lException = unhandledExceptionEventArgs.Exception;
             try
             {
                 await
                     HttpUtility.GetRequest(
                         new Uri(Uri.EscapeUriString("https://piwik.infinitesoul.me/piwik.php?idsite=1&rec=1" +
                                                     "&url=https://error.infinitesoul.me/&action_name=ErrorReport&apiv=1" +
-                                                    $"&c_n={unhandledExceptionEventArgs.Exception.GetType().FullName}" +
-                                                    $"&c_p=v{typeof(App).GetTypeInfo().Assembly.GetName().Version}: {unhandledExceptionEventArgs.Message}" +
+                                                    $"&c_n={lException.GetType().FullName}" +
+                                                    $"&c_p={{\"version\": \"{typeof(App).GetTypeInfo().Assembly.GetName().Version}\", " +
+                                                    $"\"unhandledMessage\": \"{unhandledExceptionEventArgs.Message}\", " +
+                                                    $"\"exceptionMessage\": \"{lException.Message}\", " +
+                                                    $"\"stacktrace\": \"{lException.StackTrace}\"}}" +
                                                     "&c_i=&send_image=0")),
                         CancellationToken.None);
             }

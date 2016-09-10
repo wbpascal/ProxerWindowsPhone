@@ -59,7 +59,7 @@ namespace Proxer
         private async void MainWebView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
         {
             if (args.Uri.Authority.Equals("proxer.me")) return;
-
+            throw new ArgumentNullException();
             args.Cancel = true;
             this.IsLoadingStream = true;
             try
