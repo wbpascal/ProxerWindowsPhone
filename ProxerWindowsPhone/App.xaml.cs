@@ -8,6 +8,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using Proxer.Utility;
 
 namespace Proxer
 {
@@ -84,6 +85,7 @@ namespace Proxer
             }
             finally
             {
+                await MessageQueue.CancelShowMessages();
                 await
                     new MessageDialog(
                         "Es ist ein Fehler aufgetreten und die Anwendung kann nicht fortfahren! " +

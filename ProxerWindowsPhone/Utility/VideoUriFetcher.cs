@@ -7,7 +7,7 @@ using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace Proxer
+namespace Proxer.Utility
 {
     public static class VideoUriFetcher
     {

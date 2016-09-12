@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Proxer
+namespace Proxer.Utility
 {
     public static class HttpUtility
     {

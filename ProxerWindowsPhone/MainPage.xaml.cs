@@ -3,10 +3,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Data.Html;
 using Windows.Phone.UI.Input;
-using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Proxer.Utility;
 
 namespace Proxer
 {
@@ -16,6 +16,7 @@ namespace Proxer
 
         public MainPage()
         {
+            MessageQueue.CurrentTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
             this.InitializeComponent();
             this.NavigationCacheMode = NavigationCacheMode.Required;
             HardwareButtons.BackPressed += this.HardwareButtonsOnBackPressed;
@@ -59,7 +60,6 @@ namespace Proxer
         private async void MainWebView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
         {
             if (args.Uri.Authority.Equals("proxer.me")) return;
-            throw new ArgumentNullException();
             args.Cancel = true;
             this.IsLoadingStream = true;
             try
@@ -74,7 +74,7 @@ namespace Proxer
             }
             catch
             {
-                await new MessageDialog("Der Stream konnte nicht abgerufen werden!").ShowAsync();
+                MessageQueue.AddMessage("Der Stream konnte nicht abgerufen werden!");
             }
             finally
             {
@@ -82,9 +82,9 @@ namespace Proxer
             }
         }
 
-        private async void MainWebView_ScriptNotify(object sender, NotifyEventArgs e)
+        private void MainWebView_ScriptNotify(object sender, NotifyEventArgs e)
         {
-            await new MessageDialog(HtmlUtilities.ConvertToText(e.Value)).ShowAsync();
+            MessageQueue.AddMessage(HtmlUtilities.ConvertToText(e.Value));
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
