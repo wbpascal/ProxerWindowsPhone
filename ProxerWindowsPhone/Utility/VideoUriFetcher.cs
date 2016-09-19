@@ -72,7 +72,7 @@ namespace Proxer.Utility
                     StartVideoFromUri(await GetDailymotionStreamUri(baseUri, cancellationToken));
                     break;
                 default:
-                    await
+                    await await
                         Task.Factory.StartNew(() => Launcher.LaunchUriAsync(baseUri), cancellationToken,
                             TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
                     break;
