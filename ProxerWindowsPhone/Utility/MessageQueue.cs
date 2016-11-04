@@ -9,17 +9,12 @@ namespace Proxer.Utility
     public static class MessageQueue
     {
         private static Task _endlessTask;
-        private static readonly CancellationTokenSource TokenSource = new CancellationTokenSource();
         private static readonly Queue<string> Messages = new Queue<string>();
-
-        static MessageQueue()
-        {
-            StartTasks();
-        }
+        private static readonly CancellationTokenSource TokenSource = new CancellationTokenSource();
 
         #region Properties
 
-        public static TaskScheduler CurrentTaskScheduler { get; set; }
+        private static TaskScheduler CurrentTaskScheduler { get; set; }
 
         #endregion
 
@@ -30,17 +25,23 @@ namespace Proxer.Utility
             Messages.Enqueue(message);
         }
 
-        public static async Task CancelShowMessages()
+        public static async Task CancelQueue()
         {
             if (!TokenSource.IsCancellationRequested) TokenSource.Cancel();
             await _endlessTask;
+        }
+
+        public static void Initialise(TaskScheduler taskScheduler)
+        {
+            CurrentTaskScheduler = taskScheduler;
+            StartTasks();
         }
 
         private static async Task ShowMessages()
         {
             while (!TokenSource.IsCancellationRequested)
             {
-                while (Messages.Count > 0 && CurrentTaskScheduler != null)
+                while ((Messages.Count > 0) && (CurrentTaskScheduler != null))
                     await
                         await Task.Factory.StartNew(new MessageDialog(Messages.Dequeue()).ShowAsync, TokenSource.Token,
                             TaskCreationOptions.None, CurrentTaskScheduler ?? TaskScheduler.Default);

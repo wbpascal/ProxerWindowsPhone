@@ -16,7 +16,7 @@ namespace Proxer
 
         public MainPage()
         {
-            MessageQueue.CurrentTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+            MessageQueue.Initialise(TaskScheduler.FromCurrentSynchronizationContext());
             this.InitializeComponent();
             this.NavigationCacheMode = NavigationCacheMode.Required;
             HardwareButtons.BackPressed += this.HardwareButtonsOnBackPressed;

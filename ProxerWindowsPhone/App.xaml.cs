@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using System.Threading;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -64,28 +63,17 @@ namespace Proxer
             UnhandledExceptionEventArgs unhandledExceptionEventArgs)
         {
             unhandledExceptionEventArgs.Handled = true;
-            Exception lException = unhandledExceptionEventArgs.Exception;
             try
             {
-                await
-                    HttpUtility.GetRequest(
-                        new Uri(Uri.EscapeUriString("https://piwik.infinitesoul.me/piwik.php?idsite=1&rec=1" +
-                                                    "&url=https://error.infinitesoul.me/&action_name=ErrorReport&apiv=1" +
-                                                    $"&c_n={lException.GetType().FullName}" +
-                                                    $"&c_p={{\"version\": \"{typeof(App).GetTypeInfo().Assembly.GetName().Version}\", " +
-                                                    $"\"unhandledMessage\": \"{unhandledExceptionEventArgs.Message}\", " +
-                                                    $"\"exceptionMessage\": \"{lException.Message}\", " +
-                                                    $"\"stacktrace\": \"{lException.StackTrace}\"}}" +
-                                                    "&c_i=&send_image=0")),
-                        CancellationToken.None);
+                await PiwikLogger.LogUnhandledException(unhandledExceptionEventArgs, CancellationToken.None);
             }
             catch
             {
-                //ignore
+                // ignored
             }
             finally
             {
-                await MessageQueue.CancelShowMessages();
+                await MessageQueue.CancelQueue();
                 await
                     new MessageDialog(
                         "Es ist ein Fehler aufgetreten und die Anwendung kann nicht fortfahren! " +
