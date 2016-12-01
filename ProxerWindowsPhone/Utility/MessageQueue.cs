@@ -28,7 +28,7 @@ namespace Proxer.Utility
         public static async Task CancelQueue()
         {
             if (!TokenSource.IsCancellationRequested) TokenSource.Cancel();
-            await _endlessTask;
+            await _endlessTask.ConfigureAwait(false);
         }
 
         public static void Initialise(TaskScheduler taskScheduler)
@@ -44,8 +44,9 @@ namespace Proxer.Utility
                 while ((Messages.Count > 0) && (CurrentTaskScheduler != null))
                     await
                         await Task.Factory.StartNew(new MessageDialog(Messages.Dequeue()).ShowAsync, TokenSource.Token,
-                            TaskCreationOptions.None, CurrentTaskScheduler ?? TaskScheduler.Default);
-                await Task.Delay(100);
+                                TaskCreationOptions.None, CurrentTaskScheduler ?? TaskScheduler.Default)
+                            .ConfigureAwait(true);
+                await Task.Delay(100).ConfigureAwait(true);
             }
         }
 

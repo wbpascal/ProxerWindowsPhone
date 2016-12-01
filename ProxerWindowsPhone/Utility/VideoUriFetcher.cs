@@ -15,7 +15,7 @@ namespace Proxer.Utility
 
         private static async Task<Uri> GetDailymotionStreamUri(Uri baseUri, CancellationToken cancellationToken)
         {
-            string lResponse = await HttpUtility.GetRequest(baseUri, cancellationToken);
+            string lResponse = await HttpUtility.GetRequest(baseUri, cancellationToken).ConfigureAwait(false);
             Match lFirstMatch = new Regex("\"(http[^\"]+?\\.mp4\\S+?)\"").Match(lResponse);
             if (lFirstMatch.Success) return new Uri(lFirstMatch.Captures[0].Value);
             throw new Exception();
@@ -23,7 +23,7 @@ namespace Proxer.Utility
 
         private static async Task<Uri> GetMp4UploadStreamUri(Uri baseUri, CancellationToken cancellationToken)
         {
-            string lResponse = await HttpUtility.GetRequest(baseUri, cancellationToken);
+            string lResponse = await HttpUtility.GetRequest(baseUri, cancellationToken).ConfigureAwait(false);
             Match lFirstMatch = new Regex(@"(http[s]*:\/\/www[0-9]+\S+?video\.mp4)").Match(lResponse);
             if (lFirstMatch.Success) return new Uri(lFirstMatch.Captures[0].Value);
             throw new Exception();
@@ -31,7 +31,7 @@ namespace Proxer.Utility
 
         private static async Task<Uri> GetProxerStreamUri(Uri baseUri, CancellationToken cancellationToken)
         {
-            string lResponse = await HttpUtility.GetRequest(baseUri, cancellationToken);
+            string lResponse = await HttpUtility.GetRequest(baseUri, cancellationToken).ConfigureAwait(false);
             Match lFirstMatch = new Regex(@"(http\S+?\.mp4)").Match(lResponse);
             if (lFirstMatch.Success) return new Uri(lFirstMatch.Captures[0].Value);
             throw new Exception();
@@ -39,16 +39,17 @@ namespace Proxer.Utility
 
         private static async Task<Uri> GetStreamcloudStreamUri(Uri baseUri, CancellationToken cancellationToken)
         {
-            string lResponse = await HttpUtility.GetRequest(baseUri, cancellationToken);
+            string lResponse = await HttpUtility.GetRequest(baseUri, cancellationToken).ConfigureAwait(false);
             MatchCollection lPostMatches =
                 new Regex("input type=\"hidden\" name=\"(?<test1>\\S+?)\" value=\"(?<test2>\\S+?)\"").Matches(lResponse);
             Dictionary<string, string> lPostArgsDictionary = new Dictionary<string, string>();
             foreach (Match match in lPostMatches)
                 lPostArgsDictionary.Add(match.Groups[1].Value, match.Groups[2].Value);
 
-            await Task.Delay(TimeSpan.FromSeconds(11), cancellationToken);
+            await Task.Delay(TimeSpan.FromSeconds(11), cancellationToken).ConfigureAwait(false);
 
-            string lPostResponse = await HttpUtility.PostRequest(baseUri, lPostArgsDictionary, cancellationToken);
+            string lPostResponse =
+                await HttpUtility.PostRequest(baseUri, lPostArgsDictionary, cancellationToken).ConfigureAwait(false);
             Match lFirstMatch = new Regex(@"(http\S+?video\.mp4)").Match(lPostResponse);
             if (lFirstMatch.Success) return new Uri(lFirstMatch.Captures[0].Value);
 
@@ -60,21 +61,21 @@ namespace Proxer.Utility
             switch (baseUri.Host.Replace("www.", string.Empty))
             {
                 case "stream.proxer.me":
-                    StartVideoFromUri(await GetProxerStreamUri(baseUri, cancellationToken));
+                    StartVideoFromUri(await GetProxerStreamUri(baseUri, cancellationToken).ConfigureAwait(false));
                     break;
                 case "mp4upload.com":
-                    StartVideoFromUri(await GetMp4UploadStreamUri(baseUri, cancellationToken));
+                    StartVideoFromUri(await GetMp4UploadStreamUri(baseUri, cancellationToken).ConfigureAwait(false));
                     break;
                 case "streamcloud.eu":
-                    StartVideoFromUri(await GetStreamcloudStreamUri(baseUri, cancellationToken));
+                    StartVideoFromUri(await GetStreamcloudStreamUri(baseUri, cancellationToken).ConfigureAwait(false));
                     break;
                 case "dailymotion.com":
-                    StartVideoFromUri(await GetDailymotionStreamUri(baseUri, cancellationToken));
+                    StartVideoFromUri(await GetDailymotionStreamUri(baseUri, cancellationToken).ConfigureAwait(false));
                     break;
                 default:
-                    await await
-                        Task.Factory.StartNew(() => Launcher.LaunchUriAsync(baseUri), cancellationToken,
-                            TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
+                    await await Task.Factory.StartNew(() => Launcher.LaunchUriAsync(baseUri), cancellationToken,
+                            TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext())
+                        .ConfigureAwait(false);
                     break;
             }
         }

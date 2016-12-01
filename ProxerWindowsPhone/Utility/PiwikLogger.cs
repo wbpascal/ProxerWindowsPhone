@@ -32,7 +32,7 @@ namespace Proxer.Utility
         {
             await HttpUtility.GetRequest(new Uri(
                     Uri.EscapeUriString($"{PiwikUrl}piwik.php?{GetPiwikParameters(unhandledExceptionEventArgs)}")),
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
         }
 
         #endregion

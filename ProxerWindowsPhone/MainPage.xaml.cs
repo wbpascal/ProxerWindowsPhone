@@ -64,9 +64,8 @@ namespace Proxer
             this.IsLoadingStream = true;
             try
             {
-                await
-                    VideoUriFetcher.HandleStreamPartnerUri(args.Uri,
-                        (this._tokenSource = new CancellationTokenSource()).Token);
+                await VideoUriFetcher.HandleStreamPartnerUri(args.Uri,
+                    (this._tokenSource = new CancellationTokenSource()).Token).ConfigureAwait(false);
             }
             catch (TaskCanceledException)
             {

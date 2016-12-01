@@ -14,8 +14,11 @@ namespace Proxer.Utility
         {
             using (HttpClient lClient = new HttpClient())
             {
-                HttpResponseMessage lResult = await lClient.GetAsync(addressUri, cancellationToken);
-                return lResult.IsSuccessStatusCode ? await lResult.Content.ReadAsStringAsync() : string.Empty;
+                HttpResponseMessage lResult = await lClient.GetAsync(addressUri, cancellationToken)
+                    .ConfigureAwait(false);
+                return lResult.IsSuccessStatusCode
+                    ? await lResult.Content.ReadAsStringAsync().ConfigureAwait(false)
+                    : string.Empty;
             }
         }
 
@@ -25,8 +28,11 @@ namespace Proxer.Utility
             using (HttpClient lClient = new HttpClient())
             {
                 HttpResponseMessage lResult =
-                    await lClient.PostAsync(addressUri, new FormUrlEncodedContent(postArgs), cancellationToken);
-                return lResult.IsSuccessStatusCode ? await lResult.Content.ReadAsStringAsync() : string.Empty;
+                    await lClient.PostAsync(addressUri, new FormUrlEncodedContent(postArgs), cancellationToken)
+                        .ConfigureAwait(false);
+                return lResult.IsSuccessStatusCode
+                    ? await lResult.Content.ReadAsStringAsync().ConfigureAwait(false)
+                    : string.Empty;
             }
         }
 
