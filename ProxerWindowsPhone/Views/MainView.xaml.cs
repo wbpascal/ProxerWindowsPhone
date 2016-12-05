@@ -1,33 +1,28 @@
 ﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Windows.Data.Html;
 using Windows.Phone.UI.Input;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Proxer.Utility;
+using Proxer.ViewModels;
 
-namespace Proxer
+namespace Proxer.Views
 {
-    public sealed partial class MainPage
+    public sealed partial class MainView
     {
-        private CancellationTokenSource _tokenSource;
-
-        public MainPage()
+        public MainView()
         {
-            MessageQueue.Initialise(TaskScheduler.FromCurrentSynchronizationContext());
+            this.DataContext = this;
+            this.ViewModel = new MainViewModel();
             this.InitializeComponent();
+
             this.NavigationCacheMode = NavigationCacheMode.Required;
             HardwareButtons.BackPressed += this.HardwareButtonsOnBackPressed;
         }
 
         #region Properties
 
-        private bool IsLoadingStream
-        {
-            set { this.LoadingSignGrid.Visibility = value ? Visibility.Visible : Visibility.Collapsed; }
-        }
+        public MainViewModel ViewModel { get; }
 
         #endregion
 
@@ -35,13 +30,9 @@ namespace Proxer
 
         private void HardwareButtonsOnBackPressed(object sender, BackPressedEventArgs backPressedEventArgs)
         {
-            if (backPressedEventArgs.Handled || ((Window.Current.Content as Frame)?.SourcePageType != typeof(MainPage)))
-                return;
-
+            if (backPressedEventArgs.Handled || this.ViewModel.CancelAllTasks() || !this.MainWebView.CanGoBack) return;
             backPressedEventArgs.Handled = true;
-            if ((this._tokenSource != null) && !this._tokenSource.IsCancellationRequested) this._tokenSource.Cancel();
-            else if (this.MainWebView.CanGoBack) this.MainWebView.GoBack();
-            else Application.Current.Exit();
+            this.MainWebView.GoBack();
         }
 
         private async void MainWebView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
@@ -59,26 +50,7 @@ namespace Proxer
 
         private async void MainWebView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
         {
-            if (args.Uri.Authority.Equals("proxer.me")) return;
-            args.Cancel = true;
-            this.IsLoadingStream = true;
-            try
-            {
-                await VideoUriFetcher.HandleStreamPartnerUri(args.Uri,
-                    (this._tokenSource = new CancellationTokenSource()).Token).ConfigureAwait(false);
-            }
-            catch (TaskCanceledException)
-            {
-                //ignored
-            }
-            catch
-            {
-                MessageQueue.AddMessage("Der Stream konnte nicht abgerufen werden!");
-            }
-            finally
-            {
-                this.IsLoadingStream = false;
-            }
+            args.Cancel = await this.ViewModel.HandleUri(args.Uri).ConfigureAwait(false);
         }
 
         private void MainWebView_ScriptNotify(object sender, NotifyEventArgs e)

@@ -1,16 +1,23 @@
 ﻿<Page
-    x:Class="Proxer.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converter="using:Proxer.Utility.Converter"
+    xmlns:views="using:Proxer.Views"
+    x:Class="Proxer.Views.MainView"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" d:DataContext="{d:DesignInstance views:MainView}">
+
+    <Page.Resources>
+        <converter:BooleanToVisibilityCollapsedConverter x:Key="BooleanToVisibilityCollapsedConverter" />
+    </Page.Resources>
 
     <Grid Background="#FF343434">
         <WebView x:Name="MainWebView" RequestedTheme="Dark" NavigationStarting="MainWebView_NavigationStarting"
                  ScriptNotify="MainWebView_ScriptNotify" NavigationCompleted="MainWebView_NavigationCompleted" />
-        <Grid x:Name="LoadingSignGrid" Visibility="Collapsed">
+        <Grid
+            Visibility="{Binding ViewModel.IsLoadingStream, Converter={StaticResource BooleanToVisibilityCollapsedConverter}}">
             <Rectangle Fill="Black" Opacity="0.7" />
             <Border BorderBrush="White" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="1">
                 <StackPanel Background="Black" Orientation="Horizontal">

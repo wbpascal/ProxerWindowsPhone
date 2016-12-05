@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Phone.UI.Input;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using Azuria.Api;
 using Proxer.Utility;
+using Proxer.Views;
 
 namespace Proxer
 {
@@ -17,15 +21,31 @@ namespace Proxer
 
         public App()
         {
+            HardwareButtons.BackPressed += HardwareButtonsOnBackPressed;
             this.InitializeComponent();
             this.Suspending += OnSuspending;
             this.UnhandledException += OnUnhandledException;
         }
 
+        #region Methods
+
+        private static void HardwareButtonsOnBackPressed(object sender, BackPressedEventArgs backPressedEventArgs)
+        {
+            Frame rootFrame = Window.Current.Content as Frame;
+
+            if ((rootFrame == null) || !rootFrame.CanGoBack) return;
+            backPressedEventArgs.Handled = true;
+            rootFrame.GoBack();
+        }
+
+        #endregion
+
         #region
 
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            MessageQueue.Initialise(TaskScheduler.FromCurrentSynchronizationContext());
+
             Frame rootFrame = Window.Current.Content as Frame;
 
             if (rootFrame == null)
@@ -46,7 +66,7 @@ namespace Proxer
                 rootFrame.ContentTransitions = null;
                 rootFrame.Navigated += this.RootFrame_FirstNavigated;
 
-                if (!rootFrame.Navigate(typeof(MainPage), e.Arguments))
+                if (!rootFrame.Navigate(typeof(MainView), e.Arguments))
                     throw new Exception("Failed to create initial page");
             }
 

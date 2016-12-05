@@ -2,17 +2,16 @@
 using Windows.Phone.UI.Input;
 using Windows.System.Display;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-namespace Proxer
+namespace Proxer.Views.Media
 {
-    public sealed partial class MediaPlayerPage
+    public sealed partial class MediaPlayerView
     {
         private DisplayRequest _appDisplayRequest;
 
-        public MediaPlayerPage()
+        public MediaPlayerView()
         {
             HardwareButtons.BackPressed += this.HardwareButtonsOnBackPressed;
             this.InitializeComponent();
@@ -22,15 +21,7 @@ namespace Proxer
 
         private void HardwareButtonsOnBackPressed(object sender, BackPressedEventArgs backPressedEventArgs)
         {
-            if (backPressedEventArgs.Handled ||
-                ((Window.Current.Content as Frame)?.SourcePageType != typeof(MediaPlayerPage))) return;
-
-            backPressedEventArgs.Handled = true;
             this.MediaPlayer.Stop();
-
-            Frame rootFrame = (Frame) Window.Current.Content;
-            if (rootFrame.CanGoBack) rootFrame.GoBack();
-            else rootFrame.Navigate(typeof(MainPage), null);
         }
 
         private void MediaPlayer_CurrentStateChanged(object sender, RoutedEventArgs e)

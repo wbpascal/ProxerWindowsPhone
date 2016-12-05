@@ -6,11 +6,17 @@ using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Proxer.ViewModels.Media;
+using Proxer.Views.Media;
 
 namespace Proxer.Utility
 {
-    public static class VideoUriFetcher
+    public static class MediaHandler
     {
+        private static readonly Regex MangaReaderUriRegex =
+            new Regex(@"http[s]?:\/\/proxer.me\/read\/(?<manga_id>\d+)\/(?<chapter_id>\d+)\/(?<lang>de|en)",
+                RegexOptions.ExplicitCapture);
+
         #region
 
         private static async Task<Uri> GetDailymotionStreamUri(Uri baseUri, CancellationToken cancellationToken)
@@ -83,7 +89,29 @@ namespace Proxer.Utility
         private static void StartVideoFromUri(Uri videoUri)
         {
             Frame rootFrame = Window.Current.Content as Frame;
-            rootFrame?.Navigate(typeof(MediaPlayerPage), videoUri);
+            rootFrame?.Navigate(typeof(MediaPlayerView), videoUri);
+        }
+
+        private static void StartMangaReader(ChapterInfo chapterInfo, bool isSlide)
+        {
+            Frame rootFrame = Window.Current.Content as Frame;
+            rootFrame?.Navigate(isSlide ? typeof(MangaReaderView) : typeof(VerticalMangaReaderView), chapterInfo);
+        }
+
+        public static bool HandleMangaReaderUri(Uri uri)
+        {
+            Match lMatch = MangaReaderUriRegex.Match(uri.AbsoluteUri);
+            if (!lMatch.Success) return false;
+
+            ChapterInfo lChapterInfo = new ChapterInfo
+            {
+                MangaId = Convert.ToInt32(lMatch.Groups["manga_id"].Value),
+                ChapterId = Convert.ToInt32(lMatch.Groups["chapter_id"].Value),
+                Language = lMatch.Groups["lang"].Value
+            };
+            StartMangaReader(lChapterInfo, uri.Query.Contains("v=slide_beta"));
+
+            return true;
         }
 
         #endregion
