@@ -17,14 +17,14 @@
         <WebView x:Name="MainWebView" RequestedTheme="Dark" NavigationStarting="MainWebView_NavigationStarting"
                  ScriptNotify="MainWebView_ScriptNotify" NavigationCompleted="MainWebView_NavigationCompleted" />
         <Grid
-            Visibility="{Binding ViewModel.IsLoadingStream, Converter={StaticResource BooleanToVisibilityCollapsedConverter}}">
+            Visibility="{Binding ViewModel.IsLoading, Converter={StaticResource BooleanToVisibilityCollapsedConverter}}">
             <Rectangle Fill="Black" Opacity="0.7" />
             <Border BorderBrush="White" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="1">
                 <StackPanel Background="Black" Orientation="Horizontal">
                     <ProgressRing Margin="5" IsActive="True" BorderThickness="1" Width="70" Height="70"
                                   Foreground="White" />
                     <TextBlock MaxWidth="200" TextWrapping="Wrap"
-                               Text="Bitte warte einen Moment. Video wird vorbereitet..." VerticalAlignment="Center"
+                               Text="Bitte warte einen Moment. Etwas wird geladen..." VerticalAlignment="Center"
                                Foreground="#FFB9B9B9" Margin="0,0,12,0" FontSize="16" />
                 </StackPanel>
             </Border>

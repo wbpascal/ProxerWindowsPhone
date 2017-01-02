@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Proxer.ViewModels.Media;
 using Proxer.Views.Media;
 
 namespace Proxer.Utility
@@ -67,21 +66,21 @@ namespace Proxer.Utility
             switch (baseUri.Host.Replace("www.", string.Empty))
             {
                 case "stream.proxer.me":
-                    StartVideoFromUri(await GetProxerStreamUri(baseUri, cancellationToken).ConfigureAwait(false));
+                    StartVideoFromUri(await GetProxerStreamUri(baseUri, cancellationToken).ConfigureAwait(true));
                     break;
                 case "mp4upload.com":
-                    StartVideoFromUri(await GetMp4UploadStreamUri(baseUri, cancellationToken).ConfigureAwait(false));
+                    StartVideoFromUri(await GetMp4UploadStreamUri(baseUri, cancellationToken).ConfigureAwait(true));
                     break;
                 case "streamcloud.eu":
-                    StartVideoFromUri(await GetStreamcloudStreamUri(baseUri, cancellationToken).ConfigureAwait(false));
+                    StartVideoFromUri(await GetStreamcloudStreamUri(baseUri, cancellationToken).ConfigureAwait(true));
                     break;
                 case "dailymotion.com":
-                    StartVideoFromUri(await GetDailymotionStreamUri(baseUri, cancellationToken).ConfigureAwait(false));
+                    StartVideoFromUri(await GetDailymotionStreamUri(baseUri, cancellationToken).ConfigureAwait(true));
                     break;
                 default:
                     await await Task.Factory.StartNew(() => Launcher.LaunchUriAsync(baseUri), cancellationToken,
                             TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext())
-                        .ConfigureAwait(false);
+                        .ConfigureAwait(true);
                     break;
             }
         }
@@ -92,26 +91,9 @@ namespace Proxer.Utility
             rootFrame?.Navigate(typeof(MediaPlayerView), videoUri);
         }
 
-        private static void StartMangaReader(ChapterInfo chapterInfo, bool isSlide)
+        public static Match MangaUriMatch(Uri uri)
         {
-            Frame rootFrame = Window.Current.Content as Frame;
-            rootFrame?.Navigate(isSlide ? typeof(MangaReaderView) : typeof(VerticalMangaReaderView), chapterInfo);
-        }
-
-        public static bool HandleMangaReaderUri(Uri uri)
-        {
-            Match lMatch = MangaReaderUriRegex.Match(uri.AbsoluteUri);
-            if (!lMatch.Success) return false;
-
-            ChapterInfo lChapterInfo = new ChapterInfo
-            {
-                MangaId = Convert.ToInt32(lMatch.Groups["manga_id"].Value),
-                ChapterId = Convert.ToInt32(lMatch.Groups["chapter_id"].Value),
-                Language = lMatch.Groups["lang"].Value
-            };
-            StartMangaReader(lChapterInfo, uri.Query.Contains("v=slide_beta"));
-
-            return true;
+            return MangaReaderUriRegex.Match(uri.AbsoluteUri);
         }
 
         #endregion

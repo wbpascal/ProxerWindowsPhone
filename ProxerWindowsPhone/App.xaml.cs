@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
@@ -9,7 +12,9 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using Akavache;
 using Azuria.Api;
+using Newtonsoft.Json;
 using Proxer.Utility;
 using Proxer.Views;
 
@@ -42,9 +47,31 @@ namespace Proxer
 
         #region
 
+        private static void LoadSecrets()
+        {
+            const string lResourceName = "Proxer.secrets.json";
+            Assembly lAssembly = typeof(App).GetTypeInfo().Assembly;
+
+            using (Stream stream = lAssembly.GetManifestResourceStream(lResourceName))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    Dictionary<string, string> lSecrets =
+                        JsonConvert.DeserializeObject<Dictionary<string, string>>(reader.ReadToEnd());
+                    ApiInfo.Init(input => input.ApiKeyV1 = lSecrets["apiKey"].ToCharArray());
+                }
+            }
+        }
+
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            BlobCache.ApplicationName = "ProxerWindowsPhone";
             MessageQueue.Initialise(TaskScheduler.FromCurrentSynchronizationContext());
+            LoadSecrets();
+
+            //Cache will not work without this and will deadlock. Issue #216
+            BlobCache.LocalMachine.InsertObject("dumb", "WinRT is dumb");
+            BlobCache.UserAccount.Vacuum(); //Clean expired cache
 
             Frame rootFrame = Window.Current.Content as Frame;
 
@@ -75,6 +102,7 @@ namespace Proxer
 
         private static void OnSuspending(object sender, SuspendingEventArgs e)
         {
+            Task.Factory.StartNew(BlobCache.Shutdown).WaitTaskFactory(); //Make sure to save the cache
             SuspendingDeferral deferral = e.SuspendingOperation.GetDeferral();
             deferral.Complete();
         }
@@ -99,6 +127,7 @@ namespace Proxer
                     new MessageDialog(
                         "Es ist ein Fehler aufgetreten und die Anwendung kann nicht fortfahren! " +
                         "Der Fehler wurde gemeldet und die Anwendung wird nun heruntergefahren!", "ERROR!").ShowAsync();
+                await BlobCache.Shutdown().ConfigureAwait(false);
                 Current.Exit();
             }
         }

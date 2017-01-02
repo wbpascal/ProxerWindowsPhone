@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Proxer.Utility;
+using Proxer.ViewModels.Media;
+using Proxer.Views.Media;
 using ReactiveUI;
 
 namespace Proxer.ViewModels
@@ -9,22 +13,14 @@ namespace Proxer.ViewModels
     public class MainViewModel : ReactiveObject
     {
         private readonly CancellationTokenSource _tokenSource = new CancellationTokenSource();
-        private Uri _currentBrowserUri;
-
-        private bool _isLoadingStream;
+        private bool _isLoading;
 
         #region Properties
 
-        public Uri CurrentBrowserUri
+        public bool IsLoading
         {
-            get { return this._currentBrowserUri; }
-            set { this.RaiseAndSetIfChanged(ref this._currentBrowserUri, value); }
-        }
-
-        public bool IsLoadingStream
-        {
-            get { return this._isLoadingStream; }
-            set { this.RaiseAndSetIfChanged(ref this._isLoadingStream, value); }
+            get { return this._isLoading; }
+            set { this.RaiseAndSetIfChanged(ref this._isLoading, value); }
         }
 
         #endregion
@@ -39,28 +35,40 @@ namespace Proxer.ViewModels
             return true;
         }
 
-        public async Task<bool> HandleUri(Uri uri)
+        public async Task HandleUri(Uri uri)
         {
-            if (uri.Authority.Equals("proxer.me"))
-                return MediaHandler.HandleMangaReaderUri(uri);
-            this.IsLoadingStream = true;
+            this.IsLoading = true;
+
             try
             {
-                await MediaHandler.HandleStreamPartnerUri(uri, this._tokenSource.Token).ConfigureAwait(false);
+                if (uri.Authority.Equals("proxer.me"))
+                    NavigateToReader(await MangaReaderViewModel.Create(uri).ConfigureAwait(true));
+                else
+                    await MediaHandler.HandleStreamPartnerUri(uri, this._tokenSource.Token).ConfigureAwait(true);
             }
             catch (TaskCanceledException)
             {
                 //ignored as it is intended
             }
-            catch
+            catch (Exception ex)
             {
-                MessageQueue.AddMessage("Der Stream konnte nicht abgerufen werden!");
+                MessageQueue.AddMessage("Beim Laden ist ein Fehler aufgetreten! Bitte probiere es später erneut!");
             }
-            finally
-            {
-                this.IsLoadingStream = false;
-            }
-            return true;
+
+            this.IsLoading = false;
+        }
+
+        private static void NavigateToReader(MangaReaderViewModel viewModel)
+        {
+            Frame rootFrame = Window.Current.Content as Frame;
+            rootFrame?.Navigate(viewModel.IsSlide
+                ? typeof(SlideMangaReaderView)
+                : typeof(VerticalMangaReaderView), viewModel);
+        }
+
+        public bool ShouldHandleUriInternal(Uri uri)
+        {
+            return !uri.Authority.Equals("proxer.me") || MediaHandler.MangaUriMatch(uri).Success;
         }
 
         #endregion

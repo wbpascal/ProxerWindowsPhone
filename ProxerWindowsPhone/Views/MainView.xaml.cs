@@ -30,7 +30,7 @@ namespace Proxer.Views
 
         private void HardwareButtonsOnBackPressed(object sender, BackPressedEventArgs backPressedEventArgs)
         {
-            if (backPressedEventArgs.Handled || this.ViewModel.CancelAllTasks() || !this.MainWebView.CanGoBack) return;
+            if (backPressedEventArgs.Handled || !this.MainWebView.CanGoBack) return;
             backPressedEventArgs.Handled = true;
             this.MainWebView.GoBack();
         }
@@ -48,10 +48,14 @@ namespace Proxer.Views
             }
         }
 
-        private async void MainWebView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
+#pragma warning disable 4014
+        private void MainWebView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
         {
-            args.Cancel = await this.ViewModel.HandleUri(args.Uri).ConfigureAwait(false);
+            if (!this.ViewModel.ShouldHandleUriInternal(args.Uri)) return;
+            args.Cancel = true;
+            this.ViewModel.HandleUri(args.Uri);
         }
+#pragma warning restore 4014
 
         private void MainWebView_ScriptNotify(object sender, NotifyEventArgs e)
         {

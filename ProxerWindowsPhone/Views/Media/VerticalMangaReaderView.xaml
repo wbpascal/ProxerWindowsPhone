@@ -1,0 +1,36 @@
+﻿<local:MangaReaderBaseView x:Name="Page"
+                           x:Class="Proxer.Views.Media.VerticalMangaReaderView"
+                           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                           xmlns:media="using:Proxer.Views.Media"
+                           xmlns:local="using:Proxer.Views.Media"
+                           xmlns:userControls="using:Proxer.UserControls"
+                           xmlns:converter="using:Proxer.Utility.Converter"
+                           mc:Ignorable="d"
+                           Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                           d:DataContext="{d:DesignInstance media:VerticalMangaReaderView}">
+
+    <local:MangaReaderBaseView.Resources>
+        <converter:BooleanToVisibilityCollapsedConverter x:Key="BooleanToVisibilityCollapsedConverter" />
+    </local:MangaReaderBaseView.Resources>
+    <Grid>
+        <ScrollViewer ViewChanged="PageScrollViewer_ViewChanged">
+            <ItemsControl x:Name="PagePresenter" ItemsSource="{Binding ViewModel.PageImages}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Image Source="{Binding}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsStackPanel Orientation="Vertical" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </ScrollViewer>
+        <userControls:MangaReaderContainer ViewModel="{Binding ViewModel, ElementName=Page, Mode=OneWay}"
+                                           Visibility="{Binding ViewModel.IsContainerVisible, ElementName=Page, Converter={StaticResource BooleanToVisibilityCollapsedConverter}}" />
+    </Grid>
+</local:MangaReaderBaseView>

@@ -1,0 +1,49 @@
+﻿<UserControl
+    x:Class="Proxer.UserControls.MangaReaderContainer"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Proxer.UserControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignHeight="640" d:DesignWidth="400"
+    d:DataContext="{d:DesignInstance local:MangaReaderContainer}">
+
+    <Grid>
+        <Grid Background="Black" Height="50" VerticalAlignment="Top">
+            <Button Command="{Binding ViewModel.NavigateBackCommand}" BorderThickness="10,0,0,0" Padding="0"
+                    MinHeight="0" MinWidth="0" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+                <Viewbox>
+                    <Grid>
+                        <Grid Width="128" Height="128" Visibility="Collapsed" />
+                        <Path
+                            Data="M18.669049,0L32.000059,13.605025 18.560041,26.996 17.148058,25.579986 28.067927,14.700018 0,14.700018 0,12.700018 28.313973,12.700018 17.242052,1.4000228z"
+                            Stretch="Uniform" Fill="#FFFFFFFF" Width="68" Height="68" Margin="0,0,0,0"
+                            RenderTransformOrigin="0.5,0.5">
+                            <Path.RenderTransform>
+                                <TransformGroup>
+                                    <TransformGroup.Children>
+                                        <RotateTransform Angle="0" />
+                                        <ScaleTransform ScaleX="-1" ScaleY="1" />
+                                    </TransformGroup.Children>
+                                </TransformGroup>
+                            </Path.RenderTransform>
+                        </Path>
+                    </Grid>
+                </Viewbox>
+            </Button>
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock Text="{Binding ViewModel.Chapter.ParentObject.Name}" FontSize="16" FontWeight="Bold"
+                           Foreground="#FFDEDEDE" />
+                <TextBlock Text="{Binding ViewModel.Chapter.Title}" FontSize="12" Foreground="#FFC9C9C9"
+                           TextAlignment="Center" />
+            </StackPanel>
+        </Grid>
+        <Grid Background="Black" Height="40" VerticalAlignment="Bottom">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock Text="{Binding ViewModel.CurrentPageIndex}" FontSize="15" />
+                <TextBlock Text="/" FontSize="15" Margin="4,0" />
+                <TextBlock Text="{Binding ViewModel.PageEnumerable.Length}" FontSize="15" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>
