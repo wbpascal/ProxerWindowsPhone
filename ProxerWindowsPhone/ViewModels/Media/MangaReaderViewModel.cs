@@ -140,7 +140,7 @@ namespace Proxer.ViewModels.Media
                 }
                 catch
                 {
-                    MessageQueue.AddMessage("Der Manga konnte nicht geladen werden!");
+                    MessageQueue.AddMessage(ResourceUtility.GetString("LoadingErrorMsg"));
                     await Task.Factory.StartNew(NavigationHelper.NavigateBack, CancellationToken.None,
                         TaskCreationOptions.None, lMainContext).ConfigureAwait(true);
                 }

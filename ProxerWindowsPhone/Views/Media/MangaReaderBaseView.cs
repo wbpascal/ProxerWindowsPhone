@@ -36,7 +36,7 @@ namespace Proxer.Views.Media
         {
             this.ViewModel = e.Parameter as MangaReaderViewModel;
             if (this.ViewModel != null) return;
-            MessageQueue.AddMessage("Fehler beim Laden des Manga! Bitte versuche es später erneut!");
+            MessageQueue.AddMessage(ResourceUtility.GetString("LoadingErrorMsg"));
             NavigationHelper.NavigateBack();
         }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 using Proxer.Utility;
 using Proxer.ViewModels.Media;
 using ReactiveUI;
@@ -33,12 +32,6 @@ namespace Proxer.Views.Media
             this.PagePresenter.ContainerFromIndex(this.PagePresenter.SelectedIndex)?
                 .FindDescendant<ScrollViewer>()?
                 .ChangeView(null, null, 1.0f);
-        }
-
-        /// <inheritdoc />
-        protected override void OnTapped(TappedRoutedEventArgs e)
-        {
-            base.OnTapped(e);
         }
 
         #endregion

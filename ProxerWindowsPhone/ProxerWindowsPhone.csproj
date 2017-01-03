@@ -99,6 +99,7 @@
     <Compile Include="Utility\NavigationHelper.cs" />
     <Compile Include="Utility\PiwikLogger.cs" />
     <Compile Include="Utility\HttpUtility.cs" />
+    <Compile Include="Utility\ResourceUtility.cs" />
     <Compile Include="Utility\TaskExtensions.cs" />
     <Compile Include="Utility\UriExtensions.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
@@ -172,6 +173,7 @@
     <None Include="Package.StoreAssociation.xml" />
     <None Include="packages.config" />
     <None Include="ProxerWindowsPhone.pfx" />
+    <PRIResource Include="Strings\de-DE\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Akavache, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
