@@ -26,9 +26,7 @@ namespace Proxer.ViewModels.Media
         };
 
         private int _currentPageIndex;
-
-        private bool _isContainerVisible;
-
+        private bool _isContainerVisible = true;
         private bool _isLoadingPages;
 
         public MangaReaderViewModel(Manga.Chapter chapter, MangaPageEnumerable pageEnumerable, bool isSlide)
@@ -39,6 +37,7 @@ namespace Proxer.ViewModels.Media
 
             this.NavigateBackCommand = ReactiveCommand.Create(NavigationHelper.NavigateBack);
             this._containerFadeTimer.Tick += this.ContainerFadeTimerOnTick;
+            this._containerFadeTimer.Start();
         }
 
         #region Properties
@@ -80,6 +79,7 @@ namespace Proxer.ViewModels.Media
         private void ContainerFadeTimerOnTick(object sender, object o)
         {
             if (!this.IsLoadingPages) this.IsContainerVisible = false;
+            this._containerFadeTimer.Stop();
         }
 
         public static async Task<MangaReaderViewModel> Create(Uri uri)
@@ -153,8 +153,8 @@ namespace Proxer.ViewModels.Media
         public void OnViewTapped()
         {
             this.IsContainerVisible = !this.IsContainerVisible;
-            if (this._containerFadeTimer.IsEnabled) this._containerFadeTimer.Stop();
-            else this._containerFadeTimer.Start();
+            if (this.IsContainerVisible) this._containerFadeTimer.Start();
+            else this._containerFadeTimer.Stop();
         }
 
         #endregion
