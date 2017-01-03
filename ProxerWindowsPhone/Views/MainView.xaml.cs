@@ -56,7 +56,7 @@ namespace Proxer.Views
 #pragma warning disable 4014
         private void MainWebView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
         {
-            if (!this.ViewModel.ShouldHandleUriInternal(args.Uri)) return;
+            if (!this.ViewModel.ShouldHandleUri(args.Uri)) return;
             args.Cancel = true;
             this.ViewModel.HandleUri(args.Uri);
         }
