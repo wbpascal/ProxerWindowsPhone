@@ -48,6 +48,11 @@ namespace Proxer.Views
             }
         }
 
+        public void NavigateToUrl(Uri url)
+        {
+            this.MainWebView.Navigate(url);
+        }
+
 #pragma warning disable 4014
         private void MainWebView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
         {

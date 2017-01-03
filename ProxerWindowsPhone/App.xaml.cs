@@ -36,11 +36,11 @@ namespace Proxer
 
         private static void HardwareButtonsOnBackPressed(object sender, BackPressedEventArgs backPressedEventArgs)
         {
-            Frame rootFrame = Window.Current.Content as Frame;
+            Frame lRootFrame = Window.Current.Content as Frame;
 
-            if ((rootFrame == null) || !rootFrame.CanGoBack) return;
+            if ((lRootFrame == null) || !lRootFrame.CanGoBack) return;
             backPressedEventArgs.Handled = true;
-            rootFrame.GoBack();
+            lRootFrame.GoBack();
         }
 
         #endregion

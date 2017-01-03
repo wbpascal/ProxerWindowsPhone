@@ -115,8 +115,6 @@ namespace Proxer.ViewModels.Media
             }
             catch (WebException)
             {
-                MessageQueue.AddMessage("Der interne Manga Reader konnte nicht geladen werden! " +
-                                        "Du wirst nun zum offiziellen Manga Reader weitergeleitet...");
                 return null;
             }
 

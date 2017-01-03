@@ -42,7 +42,16 @@ namespace Proxer.ViewModels
             try
             {
                 if (uri.Authority.Equals("proxer.me"))
-                    NavigateToReader(await MangaReaderViewModel.Create(uri).ConfigureAwait(true));
+                {
+                    MangaReaderViewModel lViewModel = await MangaReaderViewModel.Create(uri).ConfigureAwait(true);
+                    if (lViewModel == null)
+                    {
+                        MessageQueue.AddMessage("Der interne Manga Reader konnte nicht geladen werden! " +
+                                                "Du wirst nun zum offiziellen Manga Reader weitergeleitet...");
+                        NavigationHelper.NavigateToUrl(uri.AddQueryParam("wp_skip", "true"));
+                    }
+                    else NavigateToReader(lViewModel);
+                }
                 else
                     await MediaHandler.HandleStreamPartnerUri(uri, this._tokenSource.Token).ConfigureAwait(true);
             }
@@ -50,7 +59,7 @@ namespace Proxer.ViewModels
             {
                 //ignored as it is intended
             }
-            catch (Exception ex)
+            catch
             {
                 MessageQueue.AddMessage("Beim Laden ist ein Fehler aufgetreten! Bitte probiere es später erneut!");
             }
@@ -66,9 +75,10 @@ namespace Proxer.ViewModels
                 : typeof(VerticalMangaReaderView), viewModel);
         }
 
-        public bool ShouldHandleUriInternal(Uri uri)
+        public bool ShouldHandleUri(Uri uri)
         {
-            return !uri.Authority.Equals("proxer.me") || MediaHandler.MangaUriMatch(uri).Success;
+            return (!uri.Authority.Equals("proxer.me") ||
+                   MediaHandler.MangaUriMatch(uri).Success) && !uri.Query.Contains("wp_skip=true");
         }
 
         #endregion
