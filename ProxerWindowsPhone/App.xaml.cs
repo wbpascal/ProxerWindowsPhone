@@ -69,7 +69,7 @@ namespace Proxer
             MessageQueue.Initialise(TaskScheduler.FromCurrentSynchronizationContext());
             LoadSecrets();
 
-            //Cache will not work without this and will deadlock. Issue #216
+            //Cache will not work without this and will deadlock. See issue #216
             BlobCache.LocalMachine.InsertObject("dumb", "WinRT is dumb");
             BlobCache.UserAccount.Vacuum(); //Clean expired cache
 
@@ -113,8 +113,10 @@ namespace Proxer
             unhandledExceptionEventArgs.Handled = true;
             try
             {
+                #if !DEBUG
                 await PiwikLogger.LogUnhandledException(unhandledExceptionEventArgs, CancellationToken.None)
                     .ConfigureAwait(false);
+                #endif
             }
             catch
             {
@@ -141,6 +143,6 @@ namespace Proxer
             rootFrame.Navigated -= this.RootFrame_FirstNavigated;
         }
 
-        #endregion
+#endregion
     }
 }
