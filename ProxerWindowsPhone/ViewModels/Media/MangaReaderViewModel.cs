@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Reactive;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -63,8 +62,6 @@ namespace Proxer.ViewModels.Media
         }
 
         public bool IsSlide { get; }
-
-        public Interaction<Unit, Unit> NavigateBack { get; } = new Interaction<Unit, Unit>();
 
         public ReactiveCommand NavigateBackCommand { get; }
 
@@ -146,6 +143,14 @@ namespace Proxer.ViewModels.Media
                 }
             }).ConfigureAwait(true)).ConfigureAwait(true);
             this.IsLoadingPages = false;
+        }
+
+        public void OnNavigateBack()
+        {
+            using (this.PageImages.SuppressChangeNotifications())
+            {
+                this.PageImages.RemoveRange(0, this.PageImages.Count);
+            }
         }
 
         public void OnViewTapped()

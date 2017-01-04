@@ -29,6 +29,7 @@ namespace Proxer.Views.Media
 
         private void OnPagePresenterOnSelectionChanged(object sender, SelectionChangedEventArgs args)
         {
+            if (this.PagePresenter.SelectedIndex == -1) return;
             this.PagePresenter.ContainerFromIndex(this.PagePresenter.SelectedIndex)?
                 .FindDescendant<ScrollViewer>()?
                 .ChangeView(null, null, 1.0f);

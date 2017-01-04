@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -113,7 +112,7 @@ namespace Proxer
             unhandledExceptionEventArgs.Handled = true;
             try
             {
-                #if !DEBUG
+#if !DEBUG
                 await PiwikLogger.LogUnhandledException(unhandledExceptionEventArgs, CancellationToken.None)
                     .ConfigureAwait(false);
                 #endif
@@ -143,6 +142,6 @@ namespace Proxer
             rootFrame.Navigated -= this.RootFrame_FirstNavigated;
         }
 
-#endregion
+        #endregion
     }
 }

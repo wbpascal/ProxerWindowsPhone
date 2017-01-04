@@ -36,6 +36,9 @@ namespace Proxer.Enumerable
         /// <inheritdoc />
         public void Dispose()
         {
+            this.Current.Dispose();
+            Task.Factory.StartNew(async () => { await BlobCache.UserAccount.Flush().ToTask().ConfigureAwait(false); })
+                .WaitTaskFactory();
         }
 
         /// <inheritdoc />
