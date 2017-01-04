@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
 using Azuria.ErrorHandling;
+using Azuria.Exceptions;
 using Azuria.Media;
 using Azuria.Media.Properties;
 using Proxer.Enumerable;
@@ -91,7 +92,13 @@ namespace Proxer.ViewModels.Media
 
             IProxerResult<IMediaObject> lMangaResult = await MediaObject.CreateFromId(lMangaId).ConfigureAwait(true);
             Manga lManga = lMangaResult.Result as Manga;
-            if (!lMangaResult.Success || (lManga == null)) return null;
+            if (!lMangaResult.Success || (lManga == null))
+            {
+                Exception lCaptchaException = lMangaResult.Exceptions.FirstOrDefault(
+                    exception => exception is CaptchaException);
+                if (lCaptchaException == null) return null;
+                throw lCaptchaException;
+            }
 
             IProxerResult<IEnumerable<Manga.Chapter>> lChaptersResult =
                 await lManga.GetChapters(lLanguage).ConfigureAwait(true);

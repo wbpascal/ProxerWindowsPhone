@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Azuria.Exceptions;
 using Proxer.Utility;
 using Proxer.ViewModels.Media;
 using Proxer.Views.Media;
@@ -57,6 +58,10 @@ namespace Proxer.ViewModels
             catch (TaskCanceledException)
             {
                 //ignored as it is intended
+            }
+            catch (CaptchaException)
+            {
+                NavigationHelper.NavigateToUrl(new Uri("https://proxer.me/misc/captcha"));
             }
             catch
             {
