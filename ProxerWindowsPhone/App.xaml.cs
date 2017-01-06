@@ -11,7 +11,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-using Akavache;
 using Azuria.Api;
 using Newtonsoft.Json;
 using Proxer.Utility;
@@ -64,13 +63,8 @@ namespace Proxer
 
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            BlobCache.ApplicationName = "ProxerWindowsPhone";
             MessageQueue.Initialise(TaskScheduler.FromCurrentSynchronizationContext());
             LoadSecrets();
-
-            //Cache will not work without this and will deadlock. See issue #216
-            BlobCache.LocalMachine.InsertObject("dumb", "WinRT is dumb");
-            BlobCache.UserAccount.Vacuum(); //Clean expired cache
 
             Frame rootFrame = Window.Current.Content as Frame;
 
@@ -101,7 +95,6 @@ namespace Proxer
 
         private static void OnSuspending(object sender, SuspendingEventArgs e)
         {
-            Task.Factory.StartNew(BlobCache.Shutdown).WaitTaskFactory(); //Make sure to save the cache
             SuspendingDeferral deferral = e.SuspendingOperation.GetDeferral();
             deferral.Complete();
         }
@@ -128,7 +121,6 @@ namespace Proxer
                     new MessageDialog(
                         "Es ist ein Fehler aufgetreten und die Anwendung kann nicht fortfahren! " +
                         "Der Fehler wurde gemeldet und die Anwendung wird nun heruntergefahren!", "ERROR!").ShowAsync();
-                await BlobCache.Shutdown().ConfigureAwait(false);
                 Current.Exit();
             }
         }
