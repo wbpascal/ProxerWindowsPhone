@@ -33,7 +33,7 @@
             </Button>
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock Text="{Binding ViewModel.Chapter.ParentObject.Name}" FontSize="16" FontWeight="Bold"
-                           Foreground="#FFDEDEDE" />
+                           Foreground="#FFDEDEDE" TextAlignment="Center" />
                 <TextBlock Text="{Binding ViewModel.Chapter.Title}" FontSize="12" Foreground="#FFC9C9C9"
                            TextAlignment="Center" />
             </StackPanel>
@@ -42,7 +42,7 @@
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock Text="{Binding ViewModel.CurrentPageIndex}" FontSize="15" />
                 <TextBlock Text="/" FontSize="15" Margin="4,0" />
-                <TextBlock Text="{Binding ViewModel.PageEnumerable.Length}" FontSize="15" />
+                <TextBlock Text="{Binding ViewModel.PageImages.Count}" FontSize="15" />
             </StackPanel>
         </Grid>
     </Grid>

@@ -123,9 +123,6 @@
   <data name="LoadingMsg.Text" xml:space="preserve">
     <value>Bitte warte einen Moment. Etwas wird geladen...</value>
   </data>
-  <data name="MangaLoadingMsg.Text" xml:space="preserve">
-    <value>Bitte warte einen Moment. Der Manga wird geladen...</value>
-  </data>
   <data name="RedirectToProxerReaderMsg" xml:space="preserve">
     <value>Der interne Manga Reader konnte nicht geladen werden! Du wirst nun zum offiziellen Manga Reader weitergeleitet...</value>
   </data>

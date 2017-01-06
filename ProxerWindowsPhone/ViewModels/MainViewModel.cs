@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Azuria.Exceptions;
@@ -13,8 +14,8 @@ namespace Proxer.ViewModels
 {
     public class MainViewModel : ReactiveObject
     {
-        private readonly CancellationTokenSource _tokenSource = new CancellationTokenSource();
         private bool _isLoading;
+        private CancellationTokenSource _tokenSource = new CancellationTokenSource();
 
         #region Properties
 
@@ -36,24 +37,52 @@ namespace Proxer.ViewModels
             return true;
         }
 
+        private void CreateCancellationToken()
+        {
+            if (this._tokenSource.IsCancellationRequested) this._tokenSource = new CancellationTokenSource();
+        }
+
         public async Task HandleUri(Uri uri)
         {
+            this.CreateCancellationToken();
             this.IsLoading = true;
 
             try
             {
                 if (uri.Authority.Equals("proxer.me"))
-                {
-                    MangaReaderViewModel lViewModel = await MangaReaderViewModel.Create(uri).ConfigureAwait(true);
-                    if (lViewModel == null)
-                    {
-                        MessageQueue.AddMessage(ResourceUtility.GetString("RedirectToProxerReaderMsg"));
-                        NavigationHelper.NavigateToUrl(uri.AddQueryParam("wp_skip", "true"));
-                    }
-                    else NavigateToReader(lViewModel);
-                }
+                    await ShowReaderDialog(uri, this._tokenSource.Token).ConfigureAwait(true);
                 else
                     await MediaHandler.HandleStreamPartnerUri(uri, this._tokenSource.Token).ConfigureAwait(true);
+            }
+            catch (TaskCanceledException)
+            {
+                //ignored as it is intended
+            }
+            catch
+            {
+                MessageQueue.AddMessage(ResourceUtility.GetString("LoadingErrorMsg"));
+            }
+
+            this.IsLoading = false;
+        }
+
+        private static async Task NavigateToInternalReader(Uri uri, CancellationToken token)
+        {
+            try
+            {
+                MangaReaderViewModel lViewModel = await MangaReaderViewModel.Create(uri).ConfigureAwait(true);
+                if (lViewModel == null)
+                {
+                    MessageQueue.AddMessage(ResourceUtility.GetString("RedirectToProxerReaderMsg"));
+                    NavigationHelper.NavigateToUrl(uri.AddQueryParam("wp_skip", "true"));
+                }
+                else
+                {
+                    Frame rootFrame = Window.Current.Content as Frame;
+                    rootFrame?.Navigate(lViewModel.IsSlide
+                        ? typeof(SlideMangaReaderView)
+                        : typeof(VerticalMangaReaderView), lViewModel);
+                }
             }
             catch (TaskCanceledException)
             {
@@ -67,22 +96,23 @@ namespace Proxer.ViewModels
             {
                 MessageQueue.AddMessage(ResourceUtility.GetString("LoadingErrorMsg"));
             }
-
-            this.IsLoading = false;
-        }
-
-        private static void NavigateToReader(MangaReaderViewModel viewModel)
-        {
-            Frame rootFrame = Window.Current.Content as Frame;
-            rootFrame?.Navigate(viewModel.IsSlide
-                ? typeof(SlideMangaReaderView)
-                : typeof(VerticalMangaReaderView), viewModel);
         }
 
         public bool ShouldHandleUri(Uri uri)
         {
-            return (!uri.Authority.Equals("proxer.me") ||
-                    MediaHandler.MangaUriMatch(uri).Success) && !uri.Query.Contains("wp_skip=true");
+            if (uri.Query.Contains("wp_skip=true")) return false;
+            return !uri.Authority.Equals("proxer.me") || MediaHandler.MangaUriMatch(uri).Success;
+        }
+
+        private static async Task ShowReaderDialog(Uri uri, CancellationToken token)
+        {
+            MessageDialog lMessageDialog =
+                new MessageDialog("Bitte wähle den Manga Reader aus, der gestartet werden soll.");
+            lMessageDialog.Commands.Add(new UICommand("Intern",
+                async command => await NavigateToInternalReader(uri, token).ConfigureAwait(true)));
+            lMessageDialog.Commands.Add(new UICommand("Offiziell",
+                command => NavigationHelper.NavigateToUrl(uri.AddQueryParam("wp_skip", "true"))));
+            await lMessageDialog.ShowAsync();
         }
 
         #endregion

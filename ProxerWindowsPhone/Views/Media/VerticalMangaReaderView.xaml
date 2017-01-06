@@ -20,7 +20,11 @@
             <ItemsControl x:Name="PagePresenter" ItemsSource="{Binding ViewModel.PageImages}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Image Source="{Binding}" />
+                        <Image>
+                            <Image.Source>
+                                <BitmapImage UriSource="{Binding}" />
+                            </Image.Source>
+                        </Image>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemsPanel>

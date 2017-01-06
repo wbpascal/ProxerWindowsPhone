@@ -40,16 +40,8 @@ namespace Proxer.Views.Media
             NavigationHelper.NavigateBack();
         }
 
-        /// <inheritdoc />
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
-        {
-            base.OnNavigatingFrom(e);
-            this.ViewModel.OnNavigateBack();
-        }
-
         protected virtual void OnNewViewModel(MangaReaderViewModel viewModel)
         {
-            viewModel?.LoadPages().ConfigureAwait(true);
         }
 
         /// <inheritdoc />

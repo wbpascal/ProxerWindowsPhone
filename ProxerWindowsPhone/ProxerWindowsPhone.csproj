@@ -89,8 +89,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Enumerable\MangaPageEnumerable.cs" />
-    <Compile Include="Enumerable\MangaPageEnumerator.cs" />
     <Compile Include="UserControls\MangaReaderContainer.xaml.cs">
       <DependentUpon>MangaReaderContainer.xaml</DependentUpon>
     </Compile>
@@ -103,7 +101,6 @@
     <Compile Include="Utility\TaskExtensions.cs" />
     <Compile Include="Utility\UriExtensions.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="ViewModels\Media\ChapterInfo.cs" />
     <Compile Include="ViewModels\Media\MangaReaderViewModel.cs" />
     <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
