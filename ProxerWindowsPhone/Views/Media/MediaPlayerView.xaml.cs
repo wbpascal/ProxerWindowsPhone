@@ -1,6 +1,7 @@
 ﻿using System;
 using Windows.Phone.UI.Input;
 using Windows.System.Display;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
@@ -44,6 +45,7 @@ namespace Proxer.Views.Media
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            this.Margin = new Thickness(0, ApplicationView.GetForCurrentView().VisibleBounds.Top, 0, 0);
             if (!(e.Parameter is Uri)) return;
             this.MediaPlayer.Source = (Uri) e.Parameter;
             this.MediaPlayer.Play();

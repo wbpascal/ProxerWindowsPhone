@@ -1,4 +1,5 @@
 ﻿using System;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -34,6 +35,7 @@ namespace Proxer.Views.Media
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            this.Margin = new Thickness(0, ApplicationView.GetForCurrentView().VisibleBounds.Top, 0, 0);
             this.ViewModel = e.Parameter as MangaReaderViewModel;
             if (this.ViewModel != null) return;
             MessageQueue.AddMessage(ResourceUtility.GetString("LoadingErrorMsg"));
