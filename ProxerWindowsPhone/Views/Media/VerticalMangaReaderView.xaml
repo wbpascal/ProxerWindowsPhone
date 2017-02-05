@@ -20,11 +20,7 @@
             <ItemsControl x:Name="PagePresenter" ItemsSource="{Binding ViewModel.PageImages}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Image>
-                            <Image.Source>
-                                <BitmapImage UriSource="{Binding}" />
-                            </Image.Source>
-                        </Image>
+                        <ContentPresenter Content="{Binding Mode=OneWay}" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemsPanel>
@@ -34,7 +30,7 @@
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
         </ScrollViewer>
-        <userControls:MangaReaderContainer ViewModel="{Binding ViewModel, ElementName=Page, Mode=OneWay}"
-                                           Visibility="{Binding ViewModel.IsContainerVisible, ElementName=Page, Converter={StaticResource BooleanToVisibilityCollapsedConverter}}" />
+        <userControls:ReaderContainer ViewModel="{Binding ViewModel, ElementName=Page, Mode=OneWay}"
+                                      Visibility="{Binding ViewModel.IsContainerVisible, ElementName=Page, Converter={StaticResource BooleanToVisibilityCollapsedConverter}}" />
     </Grid>
 </local:MangaReaderBaseView>

@@ -1,5 +1,6 @@
 ﻿using System;
 using Windows.UI.Xaml.Controls;
+using Proxer.UserControls.MangaReader;
 using Proxer.Utility;
 using Proxer.ViewModels.Media;
 using ReactiveUI;
@@ -31,8 +32,7 @@ namespace Proxer.Views.Media
         {
             if (this.PagePresenter.SelectedIndex == -1) return;
             this.PagePresenter.ContainerFromIndex(this.PagePresenter.SelectedIndex)?
-                .FindDescendant<ScrollViewer>()?
-                .ChangeView(null, null, 1.0f);
+                .FindDescendant<ReaderPage>()?.ResetZoom();
         }
 
         #endregion

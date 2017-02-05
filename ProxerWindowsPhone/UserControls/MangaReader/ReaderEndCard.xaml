@@ -1,0 +1,30 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Proxer.UserControls.MangaReader"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Converter="using:Proxer.Utility.Converter"
+    xmlns:media="using:Proxer.ViewModels.Media"
+    x:Class="Proxer.UserControls.MangaReader.ReaderEndCard"
+    mc:Ignorable="d" d:DesignHeight="640" d:DesignWidth="400"
+    d:DataContext="{d:DesignInstance media:ReaderEndCardViewModel}">
+
+    <UserControl.Resources>
+        <Converter:BooleanToVisibilityCollapsedConverter x:Key="BooleanToVisibilityInvertedConverter" Invert="True" />
+    </UserControl.Resources>
+
+    <Grid>
+        <ContentPresenter x:Name="BackgroundPresenter" VerticalAlignment="Center" />
+        <Grid>
+            <Canvas Background="Black" Opacity="0.4" />
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Button HorizontalAlignment="Stretch" Command="{Binding NavigateNextChapterCommand}"
+                        Visibility="{Binding IsLastChapter, Converter={StaticResource BooleanToVisibilityInvertedConverter}}"
+                        Content="Zum nächsten Kapitel" />
+                <Button HorizontalAlignment="Stretch" Command="{Binding NavigateBackCommand}"
+                        Content="Zurück zum aktuellen Kapitel" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

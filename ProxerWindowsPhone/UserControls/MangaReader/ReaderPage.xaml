@@ -1,0 +1,21 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Proxer.UserControls.MangaReader"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="RootControl"
+    x:Class="Proxer.UserControls.MangaReader.ReaderPage"
+    mc:Ignorable="d" d:DesignHeight="640" d:DesignWidth="400">
+
+    <ScrollViewer x:Name="LayoutRoot" ZoomMode="Enabled" MinZoomFactor="1" MaxZoomFactor="4"
+                  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+               Stretch="Uniform" MaxWidth="{Binding ZoomMaxWidth, ElementName=RootControl}"
+               MaxHeight="{Binding ZoomMaxHeight, ElementName=RootControl}">
+            <Image.Source>
+                <BitmapImage UriSource="{Binding UriSource, ElementName=RootControl}" />
+            </Image.Source>
+        </Image>
+    </ScrollViewer>
+</UserControl>

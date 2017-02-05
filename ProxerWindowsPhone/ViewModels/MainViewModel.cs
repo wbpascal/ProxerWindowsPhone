@@ -107,7 +107,7 @@ namespace Proxer.ViewModels
         private static async Task ShowReaderDialog(Uri uri, CancellationToken token)
         {
             MessageDialog lMessageDialog =
-                new MessageDialog("Bitte wähle den Manga Reader aus, der gestartet werden soll.");
+                new MessageDialog(ResourceUtility.GetString("ChooseReaderMsg"));
             lMessageDialog.Commands.Add(new UICommand("Intern",
                 async command => await NavigateToInternalReader(uri, token).ConfigureAwait(true)));
             lMessageDialog.Commands.Add(new UICommand("Offiziell",

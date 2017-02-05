@@ -4,16 +4,16 @@ using Proxer.ViewModels.Media;
 
 namespace Proxer.UserControls
 {
-    public sealed partial class MangaReaderContainer : UserControl
+    public sealed partial class ReaderContainer : UserControl
     {
         public static readonly DependencyProperty ReaderContentProperty = DependencyProperty.Register(
-            nameof(ReaderContent), typeof(object), typeof(MangaReaderContainer), new PropertyMetadata(default(object)));
+            nameof(ReaderContent), typeof(object), typeof(ReaderContainer), new PropertyMetadata(default(object)));
 
         public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
-            nameof(ViewModel), typeof(MangaReaderViewModel), typeof(MangaReaderContainer),
+            nameof(ViewModel), typeof(MangaReaderViewModel), typeof(ReaderContainer),
             new PropertyMetadata(default(MangaReaderViewModel)));
 
-        public MangaReaderContainer()
+        public ReaderContainer()
         {
             this.DataContext = this;
             this.InitializeComponent();

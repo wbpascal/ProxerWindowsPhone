@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
@@ -8,6 +9,7 @@ using Azuria.ErrorHandling;
 using Azuria.Exceptions;
 using Azuria.Media;
 using Azuria.Media.Properties;
+using Proxer.UserControls.MangaReader;
 using Proxer.Utility;
 using ReactiveUI;
 
@@ -23,13 +25,21 @@ namespace Proxer.ViewModels.Media
         private int _currentPageIndex;
         private bool _isContainerVisible = true;
 
-        public MangaReaderViewModel(Manga.Chapter chapter, IEnumerable<Uri> pageUris, bool isSlide)
+        public MangaReaderViewModel(Manga.Chapter chapter, IEnumerable<Uri> pageUris, bool isSlide, bool isLastChapter)
         {
             this.Chapter = chapter;
             this.IsSlide = isSlide;
-            this.PageImages.AddRange(pageUris);
 
             this.NavigateBackCommand = ReactiveCommand.Create(NavigationHelper.NavigateBack);
+
+            Uri[] lPageUris = pageUris as Uri[] ?? pageUris.ToArray();
+            this.PageImages.AddRange(lPageUris.Select(uri => new ReaderPage {UriSource = uri.AbsoluteUri}));
+            this.PageImages.Add(new ReaderEndCard
+            {
+                UriSource = lPageUris.LastOrDefault()?.AbsoluteUri,
+                ViewModel = this.CreateEndCardViewModel(chapter, isLastChapter)
+            });
+
             this._containerFadeTimer.Tick += this.ContainerFadeTimerOnTick;
             this._containerFadeTimer.Start();
         }
@@ -54,7 +64,7 @@ namespace Proxer.ViewModels.Media
 
         public ReactiveCommand NavigateBackCommand { get; }
 
-        public ReactiveList<Uri> PageImages { get; } = new ReactiveList<Uri>();
+        public ReactiveList<IReaderPage> PageImages { get; } = new ReactiveList<IReaderPage>();
 
         #endregion
 
@@ -99,7 +109,20 @@ namespace Proxer.ViewModels.Media
             IProxerResult<string> lChapterTitleResult = await lChapter.Title;
             if (!lMangaNameResult.Success || !lChapterTitleResult.Success) return null;
 
-            return new MangaReaderViewModel(lChapter, lPagesResult.Result.Select(page => page.Image), lIsSlide);
+            return new MangaReaderViewModel(lChapter, lPagesResult.Result.Select(page => page.Image), lIsSlide, false);
+        }
+
+        private ReaderEndCardViewModel CreateEndCardViewModel(Manga.Chapter chapter, bool isLastChapter)
+        {
+            Uri lNextChapterUri = new Uri($"https://proxer.me/chapter/{chapter.ParentObject.Id}" +
+                                          $"/{chapter.ContentIndex + 1}" +
+                                          $"/{LanguageUtility.GetChapterString(chapter.GeneralLanguage)}");
+            ReactiveCommand<Unit, Unit> lNavigateNextChapterCommand = ReactiveCommand.Create(() =>
+            {
+                NavigationHelper.NavigateBack();
+                NavigationHelper.NavigateToUrl(lNextChapterUri);
+            });
+            return new ReaderEndCardViewModel(isLastChapter, this.NavigateBackCommand, lNavigateNextChapterCommand);
         }
 
         public void OnViewTapped()

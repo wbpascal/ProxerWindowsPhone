@@ -22,7 +22,7 @@
     </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -88,8 +88,15 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\MangaReaderContainer.xaml.cs">
-      <DependentUpon>MangaReaderContainer.xaml</DependentUpon>
+    <Compile Include="UserControls\MangaReader\IReaderPage.cs" />
+    <Compile Include="UserControls\MangaReader\ReaderContainer.xaml.cs">
+      <DependentUpon>ReaderContainer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\MangaReader\ReaderEndCard.xaml.cs">
+      <DependentUpon>ReaderEndCard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\MangaReader\ReaderPage.xaml.cs">
+      <DependentUpon>ReaderPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utility\Converter\BooleanToVisibilityCollapsedConverter.cs" />
     <Compile Include="Utility\LanguageUtility.cs" />
@@ -101,6 +108,7 @@
     <Compile Include="Utility\UriExtensions.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\Media\MangaReaderViewModel.cs" />
+    <Compile Include="ViewModels\Media\ReaderEndCardViewModel.cs" />
     <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
@@ -128,7 +136,15 @@
     <ApplicationDefinition Include="App.xaml">
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="UserControls\MangaReaderContainer.xaml">
+    <Page Include="UserControls\MangaReader\ReaderContainer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\MangaReader\ReaderEndCard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\MangaReader\ReaderPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -176,6 +192,10 @@
       <HintPath>..\packages\Azuria.0.6.1-ci234\lib\netstandard1.0\Azuria.Portable.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Graphics.Canvas, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Win2D.win81.1.20.0\lib\wpa\Microsoft.Graphics.Canvas.winmd</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -213,11 +233,6 @@
       <Private>True</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <SDKReference Include="Microsoft.VCLibs, Version=12.0">
-      <Name>Microsoft Visual C++ 2013 Runtime Package for Windows Phone</Name>
-    </SDKReference>
-  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>
@@ -231,6 +246,13 @@
     <AssemblyOriginatorKeyFile>ProxerWindowsPhone.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <Import Project="..\packages\Win2D.win81.1.20.0\build\wpa\Win2D.win81.targets" Condition="Exists('..\packages\Win2D.win81.1.20.0\build\wpa\Win2D.win81.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Dieses Projekt verweist auf mindestens ein NuGet-Paket, das auf diesem Computer fehlt. Verwenden Sie die Wiederherstellung von NuGet-Paketen, um die fehlenden Dateien herunterzuladen. Weitere Informationen finden Sie unter "http://go.microsoft.com/fwlink/?LinkID=322105". Die fehlende Datei ist "{0}".</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Win2D.win81.1.20.0\build\wpa\Win2D.win81.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Win2D.win81.1.20.0\build\wpa\Win2D.win81.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
