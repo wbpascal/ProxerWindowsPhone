@@ -117,14 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BackToChapterButton.Content" xml:space="preserve">
+    <value>Zurück zum aktuellen Kapitel</value>
+  </data>
   <data name="ChooseReaderMsg" xml:space="preserve">
     <value>Bitte wähle den Manga Reader aus, der gestartet werden soll.</value>
+  </data>
+  <data name="CouldNotNavigateMsg" xml:space="preserve">
+    <value>Ein Fehler ist bei der Navigation zu der Seite aufgetreten. Erneut probieren?</value>
   </data>
   <data name="LoadingErrorMsg" xml:space="preserve">
     <value>Beim Laden ist ein Fehler aufgetreten! Bitte versuche es später erneut!</value>
   </data>
   <data name="LoadingMsg.Text" xml:space="preserve">
     <value>Bitte warte einen Moment. Etwas wird geladen...</value>
+  </data>
+  <data name="NextChapterButton.Content" xml:space="preserve">
+    <value>Zum nächsten Kapitel</value>
   </data>
   <data name="RedirectToProxerReaderMsg" xml:space="preserve">
     <value>Der interne Manga Reader konnte nicht geladen werden! Du wirst nun zum offiziellen Manga Reader weitergeleitet...</value>
