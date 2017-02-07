@@ -108,9 +108,9 @@ namespace Proxer.ViewModels
         {
             MessageDialog lMessageDialog =
                 new MessageDialog(ResourceUtility.GetString("ChooseReaderMsg"));
-            lMessageDialog.Commands.Add(new UICommand("Intern",
+            lMessageDialog.Commands.Add(new UICommand(ResourceUtility.GetString("InternalMangaReaderChoice"),
                 async command => await NavigateToInternalReader(uri, token).ConfigureAwait(true)));
-            lMessageDialog.Commands.Add(new UICommand("Offiziell",
+            lMessageDialog.Commands.Add(new UICommand(ResourceUtility.GetString("OfficialMangaReaderChoice"),
                 command => NavigationHelper.NavigateToUrl(uri.AddQueryParam("wp_skip", "true"))));
             await lMessageDialog.ShowAsync();
         }

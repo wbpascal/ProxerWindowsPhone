@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Windows.Data.Html;
 using Windows.Phone.UI.Input;
+using Windows.UI.Popups;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Windows.Web;
 using Proxer.Utility;
 using Proxer.ViewModels;
 
@@ -37,6 +41,8 @@ namespace Proxer.Views
 
         private async void MainWebView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
         {
+            if (!args.IsSuccess) await this.ShowRetryDialog(args.Uri, args.WebErrorStatus);
+
             string[] code = {"window.alert = function(message) { window.external.notify(message) };"};
             try
             {
@@ -46,6 +52,17 @@ namespace Proxer.Views
             {
                 //ignored
             }
+        }
+
+        private async Task ShowRetryDialog(Uri url, WebErrorStatus errorCode)
+        {
+            MessageDialog lRetryDialog =
+                new MessageDialog(string.Format(ResourceUtility.GetString("CouldNotNavigateMsg"), errorCode));
+            lRetryDialog.Commands.Add(new UICommand(ResourceUtility.GetString("RetryNavigationChoice"),
+                command => this.MainWebView.Navigate(url)));
+            lRetryDialog.Commands.Add(new UICommand(ResourceUtility.GetString("CancelNavigationChoice"),
+                command => Application.Current.Exit()));
+            await lRetryDialog.ShowAsync();
         }
 
         public void NavigateToUrl(Uri url)

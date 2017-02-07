@@ -110,7 +110,7 @@ namespace Proxer
 #if !DEBUG
                 await PiwikLogger.LogUnhandledException(unhandledExceptionEventArgs, CancellationToken.None)
                     .ConfigureAwait(false);
-                #endif
+#endif
             }
             catch
             {
@@ -119,10 +119,7 @@ namespace Proxer
             finally
             {
                 await MessageQueue.CancelQueue().ConfigureAwait(false);
-                await
-                    new MessageDialog(
-                        "Es ist ein Fehler aufgetreten und die Anwendung kann nicht fortfahren! " +
-                        "Der Fehler wurde gemeldet und die Anwendung wird nun heruntergefahren!", "ERROR!").ShowAsync();
+                await new MessageDialog(ResourceUtility.GetString("UnhandledExceptionMsg")).ShowAsync();
                 Current.Exit();
             }
         }

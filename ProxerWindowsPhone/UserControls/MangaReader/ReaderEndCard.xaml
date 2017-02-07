@@ -19,9 +19,11 @@
         <Grid>
             <Canvas Background="Black" Opacity="0.4" />
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <Button x:Uid="NextChapterButton" HorizontalAlignment="Stretch" Command="{Binding NavigateNextChapterCommand}"
-                        Visibility="{Binding IsLastChapter, Converter={StaticResource BooleanToVisibilityInvertedConverter}}"/>
-                <Button x:Uid="BackToChapterButton" HorizontalAlignment="Stretch" Command="{Binding NavigateBackCommand}"/>
+                <Button x:Uid="NextChapterButton" HorizontalAlignment="Stretch"
+                        Command="{Binding NavigateNextChapterCommand}"
+                        Visibility="{Binding IsLastChapter, Converter={StaticResource BooleanToVisibilityInvertedConverter}}" />
+                <Button x:Uid="BackToChapterButton" HorizontalAlignment="Stretch"
+                        Command="{Binding NavigateBackCommand}" />
             </StackPanel>
         </Grid>
     </Grid>
