@@ -41,7 +41,7 @@ namespace Proxer.Utility
         {
             while (!TokenSource.IsCancellationRequested)
             {
-                while ((Messages.Count > 0) && (CurrentTaskScheduler != null))
+                while (Messages.Count > 0 && CurrentTaskScheduler != null)
                     await
                         await Task.Factory.StartNew(new MessageDialog(Messages.Dequeue()).ShowAsync, TokenSource.Token,
                                 TaskCreationOptions.None, CurrentTaskScheduler ?? TaskScheduler.Default)

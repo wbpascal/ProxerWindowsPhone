@@ -37,7 +37,7 @@ namespace Proxer
         {
             Frame lRootFrame = Window.Current.Content as Frame;
 
-            if ((lRootFrame == null) || !lRootFrame.CanGoBack) return;
+            if (lRootFrame == null || !lRootFrame.CanGoBack) return;
             backPressedEventArgs.Handled = true;
             lRootFrame.GoBack();
         }
@@ -132,7 +132,7 @@ namespace Proxer
             Frame rootFrame = sender as Frame;
             if (rootFrame == null) return;
             rootFrame.ContentTransitions = this._transitions ??
-                                           new TransitionCollection {new NavigationThemeTransition()};
+                new TransitionCollection {new NavigationThemeTransition()};
             rootFrame.Navigated -= this.RootFrame_FirstNavigated;
         }
 

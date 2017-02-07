@@ -51,7 +51,7 @@ namespace Proxer.UserControls.MangaReader
         private async void CanvasOnCreateResources(CanvasControl sender, CanvasCreateResourcesEventArgs args)
         {
             this._canvasBitmap = await CanvasBitmap.LoadAsync(sender.Device, new Uri(this.UriSource));
-            double lCanvasHeight = this._canvasBitmap.Size.Height*(this.ActualWidth/this._canvasBitmap.Size.Width);
+            double lCanvasHeight = this._canvasBitmap.Size.Height * (this.ActualWidth / this._canvasBitmap.Size.Width);
             this.Height = Math.Max(lCanvasHeight, this.ActualHeight);
             this.BackgroundPresenter.Height = lCanvasHeight;
             sender.Invalidate();
@@ -65,9 +65,9 @@ namespace Proxer.UserControls.MangaReader
             {
                 session.Units = CanvasUnits.Pixels;
 
-                double displayScaling = DisplayInformation.GetForCurrentView().LogicalDpi/96.0;
-                double pixelWidth = sender.ActualWidth*displayScaling;
-                double scalefactor = pixelWidth/this._canvasBitmap.Size.Width;
+                double displayScaling = DisplayInformation.GetForCurrentView().LogicalDpi / 96.0;
+                double pixelWidth = sender.ActualWidth * displayScaling;
+                double scalefactor = pixelWidth / this._canvasBitmap.Size.Width;
 
                 ScaleEffect scaleEffect = new ScaleEffect
                 {

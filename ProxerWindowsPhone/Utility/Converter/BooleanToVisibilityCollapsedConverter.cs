@@ -17,7 +17,7 @@ namespace Proxer.Utility.Converter
         /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return ((bool) value && !this.Invert) || (!(bool) value && this.Invert)
+            return (bool) value && !this.Invert || !(bool) value && this.Invert
                 ? Visibility.Visible
                 : Visibility.Collapsed;
         }

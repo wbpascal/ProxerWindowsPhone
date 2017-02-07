@@ -88,7 +88,7 @@ namespace Proxer.ViewModels.Media
 
             IProxerResult<IMediaObject> lMangaResult = await MediaObject.CreateFromId(lMangaId).ConfigureAwait(true);
             Manga lManga = lMangaResult.Result as Manga;
-            if (!lMangaResult.Success || (lManga == null))
+            if (!lMangaResult.Success || lManga == null)
             {
                 Exception lCaptchaException = lMangaResult.Exceptions.FirstOrDefault(
                     exception => exception is CaptchaException);
@@ -98,25 +98,27 @@ namespace Proxer.ViewModels.Media
 
             IProxerResult<IEnumerable<Manga.Chapter>> lChaptersResult =
                 await lManga.GetChapters(lLanguage).ConfigureAwait(true);
-            if (!lChaptersResult.Success || (lChaptersResult.Result == null)) return null;
-            Manga.Chapter lChapter = lChaptersResult.Result.FirstOrDefault(chapter => chapter.ContentIndex == lChapterNr);
+            if (!lChaptersResult.Success || lChaptersResult.Result == null) return null;
+            Manga.Chapter[] lChapters = lChaptersResult.Result.ToArray();
+            Manga.Chapter lChapter = lChapters.FirstOrDefault(chapter => chapter.ContentIndex == lChapterNr);
             if (lChapter == null) return null;
 
             IProxerResult<IEnumerable<Manga.Chapter.Page>> lPagesResult = await lChapter.Pages;
-            if (!lPagesResult.Success || (lPagesResult.Result == null)) return null;
+            if (!lPagesResult.Success || lPagesResult.Result == null) return null;
 
             IProxerResult<string> lMangaNameResult = await lManga.Name;
             IProxerResult<string> lChapterTitleResult = await lChapter.Title;
             if (!lMangaNameResult.Success || !lChapterTitleResult.Success) return null;
 
-            return new MangaReaderViewModel(lChapter, lPagesResult.Result.Select(page => page.Image), lIsSlide, false);
+            return new MangaReaderViewModel(lChapter, lPagesResult.Result.Select(page => page.Image), lIsSlide,
+                lChapters.LastOrDefault() == lChapter);
         }
 
         private ReaderEndCardViewModel CreateEndCardViewModel(Manga.Chapter chapter, bool isLastChapter)
         {
             Uri lNextChapterUri = new Uri($"https://proxer.me/chapter/{chapter.ParentObject.Id}" +
-                                          $"/{chapter.ContentIndex + 1}" +
-                                          $"/{LanguageUtility.GetChapterString(chapter.GeneralLanguage)}");
+                $"/{chapter.ContentIndex + 1}" +
+                $"/{LanguageUtility.GetChapterString(chapter.GeneralLanguage)}");
             ReactiveCommand<Unit, Unit> lNavigateNextChapterCommand = ReactiveCommand.Create(() =>
             {
                 NavigationHelper.NavigateBack();

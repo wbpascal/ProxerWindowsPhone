@@ -12,7 +12,7 @@ namespace Proxer.Utility
         public static void NavigateBack()
         {
             Frame lRootFrame = Window.Current.Content as Frame;
-            if ((lRootFrame != null) && lRootFrame.CanGoBack) lRootFrame.GoBack();
+            if (lRootFrame != null && lRootFrame.CanGoBack) lRootFrame.GoBack();
             NavigateTo(typeof(MainView), null);
         }
 

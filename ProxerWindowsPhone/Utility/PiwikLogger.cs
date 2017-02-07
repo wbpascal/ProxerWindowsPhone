@@ -18,13 +18,13 @@ namespace Proxer.Utility
         {
             Exception lException = unhandledExceptionEventArgs.Exception;
             return $"idsite={PiwikSiteId}&rec=1" +
-                   $"&url={PiwikSiteUrl}&action_name=ErrorReport&apiv=1" +
-                   $"&c_n={lException.GetType().FullName}" +
-                   $"&c_p={{\"version\": \"{typeof(App).GetTypeInfo().Assembly.GetName().Version}\", " +
-                   $"\"unhandledMessage\": \"{unhandledExceptionEventArgs.Message}\", " +
-                   $"\"exceptionMessage\": \"{lException.Message}\", " +
-                   $"\"stacktrace\": \"{lException.StackTrace}\"}}" +
-                   "&c_i=&send_image=0";
+                $"&url={PiwikSiteUrl}&action_name=ErrorReport&apiv=1" +
+                $"&c_n={lException.GetType().FullName}" +
+                $"&c_p={{\"version\": \"{typeof(App).GetTypeInfo().Assembly.GetName().Version}\", " +
+                $"\"unhandledMessage\": \"{unhandledExceptionEventArgs.Message}\", " +
+                $"\"exceptionMessage\": \"{lException.Message}\", " +
+                $"\"stacktrace\": \"{lException.StackTrace}\"}}" +
+                "&c_i=&send_image=0";
         }
 
         public static async Task LogUnhandledException(UnhandledExceptionEventArgs unhandledExceptionEventArgs,
